@@ -23,8 +23,9 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
   // DO YOUR MAGIC
-  const name = req.body.name;
+  const { name } = req.body;
   if (name) {
+    req.name = name;
     next();
   } else {
     res.status(400).json({ message: "missing required name field" });
@@ -34,7 +35,7 @@ function validateUser(req, res, next) {
 function validatePost(req, res, next) {
   // DO YOUR MAGIC
 
-  const text = req.body.text;
+  const { text } = req.body;
   if (text) {
     next();
   } else {

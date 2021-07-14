@@ -45,10 +45,11 @@ router.put("/:id", validateUserId, validateUser, (req, res) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
-  const { name } = req.body;
-  Users.update(req.params.id, name)
-    .then(() => {
-      return Users.getById(req.params.id);
+  const user = req.body;
+  const { id } = req.params;
+  Users.update(id, user)
+    .then((user) => {
+      res.status(200).json(user);
     })
     .catch((err) => {
       console.log(err);
@@ -70,6 +71,7 @@ router.delete("/:id", validateUserId, async (req, res) => {
 router.get("/:id/posts", validateUserId, (req, res) => {
   // RETURN THE ARRAY OF USER POSTS
   // this needs a middleware to verify user id
+
   Users.getUserPosts(req.params.id)
     .then((posts) => {
       res.status(200).json(posts);
@@ -86,7 +88,8 @@ router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
   // RETURN THE NEWLY CREATED USER POST
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
-  Posts.insert(req.body)
+  const newPost = { ...req.body, user_id: req.params.id };
+  Posts.insert(newPost)
     .then((post) => res.status(201).json(post))
     .catch((err) => {
       console.log(err);
